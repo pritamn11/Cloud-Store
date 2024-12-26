@@ -3,17 +3,16 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 import uuid
 
-from autoslug import AutoslugField
+from autoslug import AutoSlugField
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .managers import CustomUserManager, CustomUser
+from .managers import CustomUserManager
 # Create your models here.
 
 class User(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(default=uuid.uuid4, unique=True, primary_key=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
-    
     email = models.EmailField(_('Email Address'), unique=True)
     avatar= models.ImageField(upload_to='avatars/', null=True, blank=True)
     is_staff = models.BooleanField(default=False)
