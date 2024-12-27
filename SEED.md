@@ -32,4 +32,4 @@ superuser = User.objects.create_superuser(
 print(superuser)
 ```
 
-# need to do migration and connect db to postgresql
+# database setup sucessfully and runserver also working
