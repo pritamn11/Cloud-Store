@@ -32,4 +32,12 @@ superuser = User.objects.create_superuser(
 print(superuser)
 ```
 
-# database setup sucessfully and runserver also working
+# http://127.0.0.1:8000/api/auth/register/
+{
+    "first_name": "John",
+    "last_name": "Doe",
+    "email": "johndoe@example.com",
+    "password": "securepassword123",
+    "password2": "securepassword123",
+    "terms_agreement": true
+}
