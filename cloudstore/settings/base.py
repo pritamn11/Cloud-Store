@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
+    'simple_history',
 ]
 
 AUTH_USER_MODEL = "accounts.user"

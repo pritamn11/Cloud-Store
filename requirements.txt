@@ -22,3 +22,4 @@ rpds-py==0.17.1
 sqlparse==0.5.3
 tzdata==2024.2
 uritemplate==4.1.1
+django-simple-history==3.7.0

@@ -2,11 +2,11 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 import uuid
-
 from autoslug import AutoSlugField
 from rest_framework_simplejwt.tokens import RefreshToken
-
 from .managers import CustomUserManager
+from simple_history.models import HistoricalRecords
+
 # Create your models here.
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -22,6 +22,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     terms_agreement = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # historical records tracking
+    history = HistoricalRecords()
 
     # Link the manager here
     objects = CustomUserManager()
