@@ -153,10 +153,13 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
+    'TITLE': 'Cloud Store API',
+    'DESCRIPTION': 'Cloud Store inspired by Google Drive, built as a Google Drive clone using Django REST Framework.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     
     # OTHER SETTINGS
+     "TAGS": [
+        {"name": "Auth", "description": "Authentication endpoints"},
+     ]
 }

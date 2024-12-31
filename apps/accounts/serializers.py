@@ -6,6 +6,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from rest_framework.exceptions import ValidationError
 from .models import User
 
 
@@ -19,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "avatar",
         ]
+
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -61,21 +63,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         return User.objects.create_user(**validated_data)
     
 class LoginSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(
-        required=True,
-        max_length=255,
-        help_text=_("Enter your registered email address."),
-        error_messages={
-            "required": _("Email is required."),
-            "invalid": _("Enter a valid email address."),
-        }
-    )
-    password = serializers.CharField(
-        write_only=True,
-        max_length=128,
-        style={"input_type": "password"},
-        help_text=_("Enter your password.")
-    )
+    email = serializers.EmailField(required=True,max_length=255)
+    password = serializers.CharField(write_only=True,max_length=128)
     full_name = serializers.CharField(read_only=True)
     access_token = serializers.CharField(read_only=True)
     refresh_token = serializers.CharField(read_only=True)
@@ -113,3 +102,28 @@ class LoginSerializer(serializers.ModelSerializer):
             'access_token': str(tokens.get("access")),
             'refresh_token': str(tokens.get("refresh")),
         }
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh_token = serializers.CharField()
+    
+    def validate(self, attrs):
+        """
+        Validate that the refresh token is provided.
+        """
+        refresh_token = attrs.get("refresh_token")
+        if not refresh_token:
+            raise ValidationError("Refresh token is required.")
+        return attrs 
+    
+    def save(self, **kwargs):
+        """
+        Blacklist the provided refresh token to log out the user.
+        """
+        refresh_token = self.validated_data["refresh_token"]
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception as e:
+            raise ValidationError("Invalid or expired refresh token.") from e
+        

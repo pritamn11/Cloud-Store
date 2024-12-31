@@ -1,0 +1,74 @@
+openapi: 3.0.3
+info:
+  title: Cloud Store
+  version: 1.0.0
+  description: Your project description
+paths:
+  /api/auth/register/:
+    post:
+      operationId: api_auth_register_create
+      description: "\n             This endpoint creates a new user\n            "
+      summary: Register user
+      tags:
+      - User Management
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Register'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Register'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Register'
+        required: true
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Register'
+          description: ''
+components:
+  schemas:
+    Register:
+      type: object
+      properties:
+        first_name:
+          type: string
+          maxLength: 50
+        last_name:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email Address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 30
+          minLength: 8
+        password2:
+          type: string
+          writeOnly: true
+          maxLength: 30
+          minLength: 8
+        terms_agreement:
+          type: boolean
+      required:
+      - email
+      - first_name
+      - last_name
+      - password
+      - password2
+  securitySchemes:
+    jwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
