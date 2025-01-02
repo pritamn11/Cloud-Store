@@ -127,3 +127,24 @@ class LogoutSerializer(serializers.Serializer):
         except Exception as e:
             raise ValidationError("Invalid or expired refresh token.") from e
         
+
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    class Meta:
+        model = User
+        fields = [
+                'email',
+                ]
+
+class SetNewPasswordSerializer(serializers.Serializer):
+    """
+    Serializer to handle new password submission.
+    """
+    password = serializers.CharField(write_only=True, min_length=8)
+    confirm_password = serializers.CharField(write_only=True, min_length=8)
+
+    def validate(self, attrs):
+        if attrs.get('password') != attrs.get('confirm_password'):
+            raise serializers.ValidationError({"password": "Passwords do not match."})
+        return attrs
