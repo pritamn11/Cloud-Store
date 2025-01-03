@@ -152,7 +152,6 @@ class RequestPasswordResetAPIView(APIView):
             status=status.HTTP_200_OK
         )
 
-    
 #     def post(self, request):
 #         email = request.data['to']
 #         emailw = EmailMessage(
@@ -165,13 +164,17 @@ class RequestPasswordResetAPIView(APIView):
 #         return Response({"message": "Password reset email sent successfully."},status=status.HTTP_200_OK)
 
 
-
-
 class PasswordResetVerifyAPIView(APIView):
     """
-    API View to verify the reset password token and user ID.
+    API View to verify the reset password token and user ID (GET) 
+    and allow setting a new password (POST).
     """
+    serializer_class = SetNewPasswordSerializer
+
     def get(self,request, uidb64, token):
+        """
+        Verify the token and UID to validate the reset password request.
+        """
         user_id = smart_str(urlsafe_base64_decode(uidb64))
         try:
             # Decode the UID
@@ -193,14 +196,10 @@ class PasswordResetVerifyAPIView(APIView):
         except (DjangoUnicodeDecodeError, User.DoesNotExist):
             return Response({"message": "Invalid user or token"}, status=status.HTTP_404_NOT_FOUND)
         
-
-class SetNewPasswordAPIView(APIView):
-    """
-    API View to set the new password using a valid token and user ID.
-    """
-    serializer_class = SetNewPasswordSerializer
-
     def post(self, request, uidb64, token):
+        """
+        Set a new password for the user using the valid token and UID.
+        """
         try:
             # Decode the UID
             user_id = smart_str(urlsafe_base64_decode(uidb64))

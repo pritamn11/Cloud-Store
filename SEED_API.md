@@ -32,7 +32,15 @@ superuser = User.objects.create_superuser(
 print(superuser)
 ```
 
-# http://127.0.0.1:8000/api/auth/register/
+# API Documentation
+
+## User Registration
+**Endpoint:** `http://127.0.0.1:8000/api/auth/register/`
+
+**Request Method:** `POST`
+
+**Request Body:**
+```json
 {
     "first_name": "John",
     "last_name": "Doe",
@@ -41,3 +49,80 @@ print(superuser)
     "password2": "securepassword123",
     "terms_agreement": true
 }
+```
+
+---
+
+## User Login
+**Endpoint:** `http://localhost:8000/api/auth/login/`
+
+**Request Method:** `POST`
+
+**Request Body:**
+```json
+{
+    "email": "johndoe@example.com",
+    "password": "securepassword123"
+}
+```
+
+---
+
+## User Logout
+**Endpoint:** `http://localhost:8000/api/auth/logout/`
+
+**Request Method:** `POST`
+
+**Request Headers:**
+```
+Authorization: Bearer <access_token>
+```
+
+**Request Body:**
+```json
+{
+    "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+}
+```
+
+---
+
+## Password Reset Request
+**Endpoint:** `http://localhost:8000/api/auth/password-reset-request/`
+
+**Request Method:** `POST`
+
+**Request Body:**
+```json
+{
+    "email": "johndoe@example.com"
+}
+```
+
+---
+
+## Password Reset Confirmation
+**Endpoint:** `http://localhost:8000/api/auth/password-reset-confirm/<uidb64>/<token>/`
+
+### GET Request
+**Response:**
+```json
+{
+    "message": "Credentials validated successfully",
+    "data": {
+        "token": "<token>",
+        "uidb64": "<uidb64>"
+    }
+}
+```
+
+### POST Request
+**Request Body:**
+```json
+{
+    "password": "new_password",
+    "confirm password": "new_password"
+}
+```
+
+---
