@@ -196,7 +196,7 @@ class PasswordResetVerifyAPIView(APIView):
         except (DjangoUnicodeDecodeError, User.DoesNotExist):
             return Response({"message": "Invalid user or token"}, status=status.HTTP_404_NOT_FOUND)
         
-    def post(self, request, uidb64, token):
+    def patch(self, request, uidb64, token):
         """
         Set a new password for the user using the valid token and UID.
         """

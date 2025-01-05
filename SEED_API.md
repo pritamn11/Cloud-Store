@@ -120,9 +120,10 @@ Authorization: Bearer <access_token>
 **Request Body:**
 ```json
 {
-    "password": "new_password",
-    "confirm password": "new_password"
+  "password": "new_password",
+  "confirm_password": "new_password"
 }
+
 ```
 
 ---
