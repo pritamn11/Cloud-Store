@@ -126,4 +126,42 @@ Authorization: Bearer <access_token>
 
 ```
 
+## Folder Creation
+
+**Endpoint:** `POST http://localhost:8000/api/folders/create/`
+
+## Request Headers
+```
+Authorization: Bearer <access_token>
+```
+
+## Request Body
+To create a new folder:
+```json
+{
+    "name": "FOLDER NAME",
+    "size": 1024
+}
+```
+
+##### Creating a Folder Inside Another Folder
+If you want to create a folder within an existing folder:
+```json
+{
+    "name": "My Documents",
+    "parent_folder": 1,
+    "size": 1024
+}
+```
+- **`parent_folder`**: The ID of the folder where the new folder should be created.
+
+## Folder List
+
+**Endpoint:** `GET http://localhost:8000/api/folders/list/`
+
+## Request Headers
+```
+Authorization: Bearer <access_token>
+```
+
 ---
