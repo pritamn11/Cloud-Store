@@ -158,11 +158,27 @@ If you want to create a folder within an existing folder:
 ## Folder List
 
 **Endpoint:** `GET http://localhost:8000/api/folders/list/`
+
 **Endpoint:** `GET http://localhost:8000/api/folders/list/?parent_folder=1`
 
 ## Request Headers
 ```
 Authorization: Bearer <access_token>
 ```
+
+## Rename a Folder
+
+**Endpoint:** `PATCH http://localhost:8000/api/folders/`
+
+```json
+{
+    "name": "New Folder Name"
+}
+```
+
+## Delete a Folder
+
+**Endpoint:** `DELETE http://localhost:8000/api/folders/<folder_id>/`
+
 
 ---
