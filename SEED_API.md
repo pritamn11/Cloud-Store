@@ -161,6 +161,8 @@ If you want to create a folder within an existing folder:
 
 **Endpoint:** `GET http://localhost:8000/api/folders/list/?parent_folder=1`
 
+**Endpoint:** `GET http://localhost:8000/api/api/list/?name=name_of_folder`
+
 ## Request Headers
 ```
 Authorization: Bearer <access_token>

@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import Folder
 from rest_framework.response import Response
@@ -7,7 +8,23 @@ from rest_framework.exceptions import ValidationError
 from rest_framework import status
 from .serializers import FolderSerializer, ListFolderSerializer
 from rest_framework import status
+import django_filters
+from django_filters.rest_framework import DjangoFilterBackend
+
+
 # Create your views here.
+class FolderFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(lookup_expr="icontains")  
+    parent_folder = django_filters.NumberFilter(field_name="parent_folder__id")  # Filter by parent folder ID
+    created_at = django_filters.DateTimeFromToRangeFilter()  # Filter within date range
+
+    class Meta:
+        model = Folder
+        fields = {
+            "name":["exact", "icontains"], 
+            "parent_folder":["exact"], 
+            "created_at":["exact", "gte", "lte"], 
+        }
 
 class CreateFolderAPI(APIView):
     serializer_class = FolderSerializer
@@ -22,19 +39,25 @@ class CreateFolderAPI(APIView):
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class FolderListAPI(APIView):
+class FolderListAPI(ListAPIView):
     serializer_class = ListFolderSerializer
     permission_classes = [IsAuthenticated]
+    queryset = Folder.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = FolderFilter
 
-    def get(self, request):
-        parent_folder_id = request.query_params.get("parent_folder")
-        if parent_folder_id:
-            folders = Folder.objects.filter(user=request.user, parent_folder_id=parent_folder_id)
-        else:
-            # Retrieve top-level folders if no parent_folder is specified
-            folders = Folder.objects.filter(user=request.user, parent_folder__isnull=True)
-        serializer = self.serializer_class(folders, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    # def get(self, request):
+    #     parent_folder_id = request.query_params.get("parent_folder")
+    #     if parent_folder_id:
+    #         folders = Folder.objects.filter(user=request.user, parent_folder_id=parent_folder_id)
+    #     else:
+    #         # Retrieve top-level folders if no parent_folder is specified
+    #         folders = Folder.objects.filter(user=request.user, parent_folder__isnull=True)
+    #     serializer = self.serializer_class(folders, many=True)
+    #     return Response(serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        """Retrieve folders belonging to the authenticated user with optional filtering."""
+        return Folder.objects.filter(user=self.request.user)
 
 class FolderDetailAPI(APIView):
     serializer_class = ListFolderSerializer

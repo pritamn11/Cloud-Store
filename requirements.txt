@@ -24,3 +24,4 @@ tzdata==2024.2
 uritemplate==4.1.1
 django-simple-history==3.7.0
 django-jazzmin
+django-filter
